@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: depotflow
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/depotflow}
+    username: ${DB_USERNAME:depotflow}
+    password: ${DB_PASSWORD:depotflow}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
