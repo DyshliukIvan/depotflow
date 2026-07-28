@@ -1,22 +1,24 @@
 # DepotFlow
 
-DepotFlow is a Java backend for tracking products and stock across multiple warehouses.
+DepotFlow is a Java backend for managing products and stock across multiple warehouses. It models receiving, reservations, releases, and shipping while keeping inventory state consistent.
 
-This repository is being built incrementally as a backend engineering learning project. Each stage must be understood, tested, and explained before the next technology is introduced.
+## Current implementation
 
-## Current stage
+- Product and warehouse domain objects with input validation
+- Stock quantities separated into on-hand, reserved, and available units
+- Receive, reserve, release, and ship operations
+- Stock movement records with type, quantity, and timestamp
+- Unit tests for domain rules and invalid operations
+- Java 21, Spring Boot, and Gradle foundation
 
-Stage 0 contains only the application foundation:
+## Planned development
 
-- Java 21
-- Spring Boot
-- Gradle
-- PostgreSQL
-- Flyway
-- Docker Compose
-- Actuator health endpoint
-
-There are deliberately no domain entities or REST controllers yet.
+- REST API for warehouse and inventory operations
+- PostgreSQL persistence and Flyway migrations
+- Safe concurrent stock reservations
+- Integration tests
+- Docker-based development environment
+- GitHub Actions continuous integration
 
 ## Run
 
@@ -39,5 +41,3 @@ gradlew.bat bootRun
 ```
 
 Then open `http://localhost:8080/actuator/health`.
-
-The guided curriculum is in [docs/learning-plan.md](docs/learning-plan.md).
