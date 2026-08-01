@@ -1,4 +1,7 @@
 package com.ivandyshliuk.depotflow.inventory;
+import java.util.List;
+import java.util.ArrayList;
+import java.time.Instant;
 
 public class StockItem {
 
@@ -6,6 +9,7 @@ public class StockItem {
     private int reserved;
     private final Product product;
     private final Warehouse warehouse;
+    private final List<StockMovement> movements;
 
     public StockItem(Product newProduct, Warehouse newWarehouse) {
         if (newProduct == null ||  newWarehouse == null) throw new IllegalArgumentException();
@@ -13,6 +17,7 @@ public class StockItem {
         this.reserved = 0;
         this.product = newProduct;
         this.warehouse = newWarehouse;
+        this.movements = new ArrayList<>();
 
     }
 
@@ -35,6 +40,7 @@ public class StockItem {
     public void receive(int quantity) {
         if (quantity <= 0) throw new IllegalArgumentException();
         onHand += quantity;
+        movements.add(new StockMovement(MovementType.RECEIVE, quantity, Instant.now()));
     }
 
     public void reserve(int quantity) {
@@ -42,12 +48,14 @@ public class StockItem {
         if (quantity <= 0) throw new IllegalArgumentException();
         if (quantity > available) throw new IllegalStateException();
         reserved += quantity;
+        movements.add(new StockMovement(MovementType.RESERVE, quantity, Instant.now()));
     }
 
     public void release(int quantity) {
         if (quantity <= 0) throw new IllegalArgumentException();
         if (reserved < quantity) throw new IllegalStateException();
         reserved -= quantity;
+        movements.add(new StockMovement(MovementType.RELEASE, quantity, Instant.now()));
     }
 
     public void ship(int quantity) {
@@ -55,5 +63,10 @@ public class StockItem {
         if (reserved < quantity || onHand < quantity) throw new IllegalStateException();
         reserved -= quantity;
         onHand -= quantity;
+        movements.add(new StockMovement(MovementType.SHIP, quantity, Instant.now()));
+    }
+
+    public List<StockMovement> getMovements() {
+        return List.copyOf(movements);
     }
 }

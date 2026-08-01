@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.util.List;
+import java.util.ArrayList;
+import java.time.Instant;
 
 class StockItemTest {
 
@@ -116,6 +119,42 @@ class StockItemTest {
         item.receive(5);
         item.reserve(4);
         assertThrows(IllegalStateException.class, () -> item.ship(5));
+    }
+
+    @Test
+    void createsStockItemWithEmptyHistory(){
+        assertEquals(new ArrayList<>(), item.getMovements());
+    }
+
+    @Test
+    void createsStockItemWithReceive(){
+        item.receive(5);
+        assertEquals(MovementType.RECEIVE, item.getMovements().get(0).getType());
+        assertEquals(1, item.getMovements().size());
+        assertEquals(5, item.getMovements().get(0).getQuantity());
+    }
+
+    @Test
+    void createsStockItemWithAllTypes(){
+        item.receive(5);
+        item.reserve(2);
+        item.release(1);
+        item.ship(1);
+        assertEquals(MovementType.RECEIVE, item.getMovements().get(0).getType());
+        assertEquals(MovementType.RESERVE, item.getMovements().get(1).getType());
+        assertEquals(MovementType.RELEASE, item.getMovements().get(2).getType());
+        assertEquals(MovementType.SHIP, item.getMovements().get(3).getType());
+    }
+
+    @Test
+    void createsStockItemWithException(){
+        assertThrows(IllegalArgumentException.class, () -> item.receive(-1));
+        assertEquals(new ArrayList<>(), item.getMovements());
+    }
+
+    @Test
+    void createsStockItemTryToMakeException(){
+        assertThrows(UnsupportedOperationException.class, () -> item.getMovements().clear());
     }
 
 }
