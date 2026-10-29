@@ -17,4 +17,9 @@ jobs:
       - name: Run tests
         run: bash ./gradlew test
 
+      - name: Build aplication
+        run: bash ./gradlew bootJar
+
+      - name: Build Docker Image
+        run: docker build -t depotflow:ci .
 
