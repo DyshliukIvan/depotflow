@@ -22,6 +22,11 @@ public class WarehouseController {
         return warehouseService.createWarehouse(request.code(), request.name());
     }
 
+    @GetMapping("/{id}")
+    public Warehouse getWarehouseById(@PathVariable Long id) {
+        return warehouseService.getWarehouseById(id);
+    }
+
     @GetMapping
     public List<Warehouse> getAllWarehouses() {
         return warehouseService.getAllWarehouses();

@@ -1,15 +1,37 @@
 package com.ivandyshliuk.depotflow.inventory;
+import jakarta.persistence.*;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.time.Instant;
 
+@Entity
+@Table(name = "stock_items")
 public class StockItem {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "warehouse_id")
+    private Warehouse warehouse;
+
+    @Column(name = "on_hand", nullable = false)
     private int onHand;
+
+    @Column(nullable = false)
     private int reserved;
-    private final Product product;
-    private final Warehouse warehouse;
-    private final List<StockMovement> movements;
+
+    @Version
+    private int version;
+
+    @Transient
+    private final List<StockMovement> movements = new ArrayList<>();
 
     public StockItem(Product newProduct, Warehouse newWarehouse) {
         if (newProduct == null ||  newWarehouse == null) throw new IllegalArgumentException();
@@ -17,7 +39,6 @@ public class StockItem {
         this.reserved = 0;
         this.product = newProduct;
         this.warehouse = newWarehouse;
-        this.movements = new ArrayList<>();
 
     }
 
@@ -68,5 +89,8 @@ public class StockItem {
 
     public List<StockMovement> getMovements() {
         return List.copyOf(movements);
+    }
+
+    protected StockItem() {
     }
 }

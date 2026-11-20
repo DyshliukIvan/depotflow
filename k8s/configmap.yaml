@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: depotflow
+  name: depotflow-config
+
+data:
+  DB_URL: jdbc:postgresql://host.docker.internal:5432/depotflow
+  DB_USERNAME: depotflow

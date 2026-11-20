@@ -5,3 +5,4 @@ build/
 .env
 out/
 /gradle.properties
+depotflow-image.tar

@@ -14,6 +14,17 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+  app:
+    image: depotflow:0.1.0
+    ports:
+      - 8080:8080
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/depotflow
+      DB_USERNAME: depotflow
+      DB_PASSWORD: depotflow
+    depends_on:
+      postgres:
+        condition: service_healthy
 
 volumes:
   depotflow-postgres:

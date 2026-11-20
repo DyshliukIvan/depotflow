@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: depotflow
+  namespace: depotflow
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:
+        depotflow
+  template:
+    metadata:
+      labels:
+        app:
+          depotflow
+    spec:
+      containers:
+        - name: depotflow
+          image: depotflow:0.1.1
+          imagePullPolicy: Never
+          env:
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_URL
+                  name: depotflow-config
+            - name: DB_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_USERNAME
+                  name: depotflow-config
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: DB_PASSWORD
+                  name: depotflow-db
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /actuator/health/liveness
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+
