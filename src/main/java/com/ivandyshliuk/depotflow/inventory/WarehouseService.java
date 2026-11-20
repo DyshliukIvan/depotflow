@@ -15,11 +15,15 @@ public class WarehouseService {
 
     public Warehouse createWarehouse(String code, String name) {
         if (warehouseRepository.existsByCode(code)) {
-            throw new DublicateResourseExeption("Waregouse with code " + code + " already exists");
+            throw new DublicateResourseExeption("Warehouse with code " + code + " already exists");
         }
 
         Warehouse warehouse = new Warehouse(code, name);
         return warehouseRepository.save(warehouse);
+    }
+
+    public Warehouse getWarehouseById(Long id) {
+        return warehouseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Warehouse with ID " + id + " was not found"));
     }
 
     public List<Warehouse> getAllWarehouses() {
